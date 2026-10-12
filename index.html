@@ -41,8 +41,9 @@
   header h1{font-size:28px;font-weight:800;letter-spacing:-.5px}
   header p{font-size:15px;color:#f0e3d4;margin-top:8px;font-weight:400}
   .wrap{max-width:560px;margin:0 auto;padding:0 16px 60px}
-  .tabs{display:flex;gap:6px;margin:20px 0 0;background:#fff;border:1px solid #e8e0d2;border-radius:14px;padding:6px;box-shadow:0 2px 10px rgba(0,0,0,.04)}
-  .tab{flex:1;padding:11px 6px;border:none;background:transparent;border-radius:10px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:.18s}
+  .tabs{display:flex;gap:6px;margin:20px 0 0;background:#fff;border:1px solid #e8e0d2;border-radius:14px;padding:6px;box-shadow:0 2px 10px rgba(0,0,0,.04);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex:0 0 auto;padding:11px 14px;border:none;background:transparent;border-radius:10px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:.18s;white-space:nowrap}
   .tab.active{background:var(--maroon);color:#fff}
   .panel{display:none;margin-top:18px}
   .panel.active{display:block}
@@ -101,9 +102,13 @@
 
 <div class="wrap">
   <div class="tabs">
-    <button class="tab active" data-tab="dsr">💸 DSR &amp; Kemampuan</button>
-    <button class="tab" data-tab="reno">🔨 Kos Renovasi</button>
-    <button class="tab" data-tab="check">✅ Rumah Pertama</button>
+    <button class="tab active" data-tab="dsr">💸 DSR</button>
+    <button class="tab" data-tab="install">🏠 Installment</button>
+    <button class="tab" data-tab="reno">🔨 Renovasi</button>
+    <button class="tab" data-tab="stamp">📜 Duti Setem</button>
+    <button class="tab" data-tab="yield">📈 Yield</button>
+    <button class="tab" data-tab="deposit">💰 Deposit</button>
+    <button class="tab" data-tab="check">✅ Check</button>
   </div>
 
   <!-- ===== DSR ===== -->
@@ -180,6 +185,86 @@
     <div class="cta" id="cta-check" style="display:none">
       <p><b>Belum fully ready?</b><br>Dapatkan framework lengkap sebelum kau booking rumah pertama.</p>
       <a class="cta-link" href="https://tinyurl.com/awmebookhartanah" target="_blank">📘 Mula Dengan Panduan</a>
+    </div>
+  </div>
+
+  <!-- ===== INSTALLMENT ===== -->
+  <div class="panel" id="panel-install">
+    <div class="card">
+      <h2>Bayaran bulanan loan rumah</h2>
+      <p class="sub">Kira installment bulanan ikut harga, deposit, interest &amp; tempoh.</p>
+      <label>Harga rumah (RM)</label>
+      <input type="number" id="install-price" placeholder="cth: 400000" inputmode="numeric">
+      <label>Deposit / down payment (%)</label>
+      <input type="number" id="install-dp" value="10" placeholder="cth: 10" inputmode="numeric">
+      <label>Interest rate (%) setahun</label>
+      <input type="number" id="install-rate" value="4.5" step="0.1" placeholder="cth: 4.5" inputmode="numeric">
+      <label>Tempoh (tahun)</label>
+      <input type="number" id="install-years" value="35" placeholder="cth: 35" inputmode="numeric">
+      <button class="btn" onclick="calcInstallment()">Kira Installment</button>
+      <div class="result" id="install-result"></div>
+    </div>
+    <div class="cta" id="cta-install" style="display:none">
+      <p><b>Dah tahu installment?</b><br>Jangan sign sebelum kira DSR &amp; kos tersembunyi penuh.</p>
+      <a class="cta-link" href="https://tinyurl.com/awmebookhartanah" target="_blank">📘 Belajar Kiraan Penuh</a>
+    </div>
+  </div>
+
+  <!-- ===== STAMP DUTY ===== -->
+  <div class="panel" id="panel-stamp">
+    <div class="card">
+      <h2>Duti setem &amp; kos</h2>
+      <p class="sub">Kira duti setem SPA + loan agreement.</p>
+      <label>Harga rumah (RM)</label>
+      <input type="number" id="stamp-price" placeholder="cth: 300000" inputmode="numeric">
+      <label style="display:flex;align-items:center;gap:8px;margin-top:14px;font-weight:600">
+        <input type="checkbox" id="stamp-first" style="width:18px;height:18px;flex:0 0 auto">
+        Rumah pertama (bawah RM500K)
+      </label>
+      <button class="btn" onclick="calcStamp()">Kira Duti Setem</button>
+      <div class="result" id="stamp-result"></div>
+    </div>
+    <div class="cta" id="cta-stamp" style="display:none">
+      <p><b>Duti setem &amp; legal fees boleh cecah ribuan.</b><br>Jangan terkejut — ketahui semua kos sebelum sign SPA.</p>
+      <a class="cta-link" href="https://tinyurl.com/awmebookhartanah" target="_blank">📘 Lihat Kos Tersembunyi</a>
+    </div>
+  </div>
+
+  <!-- ===== RENTAL YIELD ===== -->
+  <div class="panel" id="panel-yield">
+    <div class="card">
+      <h2>Hasil sewa (rental yield)</h2>
+      <p class="sub">Kira berapa % untung dari sewa berbanding harga rumah.</p>
+      <label>Harga rumah (RM)</label>
+      <input type="number" id="yield-price" placeholder="cth: 300000" inputmode="numeric">
+      <label>Sewa bulanan (RM)</label>
+      <input type="number" id="yield-rent" placeholder="cth: 1500" inputmode="numeric">
+      <button class="btn" onclick="calcYield()">Kira Yield</button>
+      <div class="result" id="yield-result"></div>
+    </div>
+    <div class="cta" id="cta-yield" style="display:none">
+      <p><b>Yield tinggi tak semestinya untung.</b><br>Kira cashflow sebenar — installment, maintenance, kosong.</p>
+      <a class="cta-link" href="https://tinyurl.com/awmebookhartanah" target="_blank">📘 Kira Cashflow Betul</a>
+    </div>
+  </div>
+
+  <!-- ===== DEPOSIT ===== -->
+  <div class="panel" id="panel-deposit">
+    <div class="card">
+      <h2>Berapa lama nak kumpul deposit</h2>
+      <p class="sub">Target deposit + simpanan bulanan = tempoh kau boleh beli.</p>
+      <label>Target deposit (RM)</label>
+      <input type="number" id="dep-target" placeholder="cth: 30000" inputmode="numeric">
+      <label>Simpanan bulanan (RM)</label>
+      <input type="number" id="dep-monthly" placeholder="cth: 500" inputmode="numeric">
+      <label>Simpanan sedia ada (RM)</label>
+      <input type="number" id="dep-current" value="0" placeholder="cth: 5000" inputmode="numeric">
+      <button class="btn" onclick="calcDeposit()">Kira Tempoh</button>
+      <div class="result" id="dep-result"></div>
+    </div>
+    <div class="cta" id="cta-dep" style="display:none">
+      <p><b>Deposit boleh dicapai lebih cepat dari kau sangka.</b><br>Dapatkan strategi simpan &amp; bajet untuk rumah pertama.</p>
+      <a class="cta-link" href="https://tinyurl.com/awmebookhartanah" target="_blank">📘 Mula Rancang</a>
     </div>
   </div>
 </div>
@@ -284,6 +369,111 @@
     r.innerHTML =
       '<div class="score-ring">' + score + '/5</div>' +
       '<div style="text-align:center;font-size:14px">' + msg + '</div>';
+    cta.style.display='block';
+  }
+
+  // ===== INSTALLMENT =====
+  function calcInstallment(){
+    gtag('event','calc_installment');
+    var price = parseFloat(document.getElementById('install-price').value);
+    var dp = parseFloat(document.getElementById('install-dp').value) || 0;
+    var rate = parseFloat(document.getElementById('install-rate').value) || 4.5;
+    var years = parseFloat(document.getElementById('install-years').value) || 35;
+    var r = document.getElementById('install-result');
+    var cta = document.getElementById('cta-install');
+    if(!price || price<=0){ alert('Masukkan harga rumah dulu.'); return; }
+    var loan = price * (1 - dp/100);
+    var mr = rate/100/12, n = years*12;
+    var monthly = loan * mr * Math.pow(1+mr,n) / (Math.pow(1+mr,n)-1);
+    r.className='result show good';
+    r.innerHTML =
+      '<div class="big">' + fmt(monthly) + '/bulan</div>' +
+      '<div class="lbl">Installment untuk ' + years + ' tahun @ ' + rate + '%</div>' +
+      '<div class="stat"><span>Jumlah pinjaman (selepas deposit)</span><b>' + fmt(loan) + '</b></div>' +
+      '<div class="stat"><span>Deposit (' + dp + '%)</span><b>' + fmt(price - loan) + '</b></div>' +
+      '<div class="stat"><span>Jumlah bayar (pokok + faedah)</span><b>' + fmt(monthly*n) + '</b></div>';
+    cta.style.display='block';
+  }
+
+  // ===== STAMP DUTY =====
+  function spaDuty(p){
+    var d=0;
+    if(p>1000000){ d+=(p-1000000)*0.04; p=1000000; }
+    if(p>500000){ d+=(p-500000)*0.03; p=500000; }
+    if(p>100000){ d+=(p-100000)*0.02; p=100000; }
+    d+=p*0.01;
+    return d;
+  }
+  function calcStamp(){
+    gtag('event','calc_stamp');
+    var price = parseFloat(document.getElementById('stamp-price').value);
+    var first = document.getElementById('stamp-first').checked;
+    var r = document.getElementById('stamp-result');
+    var cta = document.getElementById('cta-stamp');
+    if(!price || price<=0){ alert('Masukkan harga rumah dulu.'); return; }
+    var spa = spaDuty(price);
+    var loan = price * 0.9;
+    var loanDuty = loan * 0.005;
+    var exempt = 0;
+    if(first && price <= 500000){ exempt = spa; spa = 0; }
+    var total = spa + loanDuty;
+    r.className='result show good';
+    var html =
+      '<div class="big">' + fmt(total) + '</div>' +
+      '<div class="lbl">Jumlah duti setem (SPA + loan)</div>' +
+      '<div class="stat"><span>Duti setem SPA</span><b>' + fmt(spa) + '</b></div>' +
+      '<div class="stat"><span>Duti setem loan (0.5%)</span><b>' + fmt(loanDuty) + '</b></div>';
+    if(exempt>0){ html += '<div class="stat"><span>Jimat (pengecualian rumah pertama)</span><b>−' + fmt(exempt) + '</b></div>'; }
+    r.innerHTML = html;
+    cta.style.display='block';
+  }
+
+  // ===== RENTAL YIELD =====
+  function calcYield(){
+    gtag('event','calc_yield');
+    var price = parseFloat(document.getElementById('yield-price').value);
+    var rent = parseFloat(document.getElementById('yield-rent').value);
+    var r = document.getElementById('yield-result');
+    var cta = document.getElementById('cta-yield');
+    if(!price || price<=0 || !rent){ alert('Masukkan harga & sewa dulu.'); return; }
+    var annual = rent*12;
+    var y = (annual/price)*100;
+    var cls = y>=5 ? 'good' : (y>=3 ? 'warn' : 'bad');
+    var note = y>=5 ? 'Padu — yield atas 5%, cashflow boleh positif.' : (y>=3 ? 'Sederhana — yield 3-5%, kena kira kos lain.' : 'Rendah — bawah 3%, sukar cover installment.');
+    r.className='result show '+cls;
+    r.innerHTML =
+      '<div class="big">' + y.toFixed(2) + '%</div>' +
+      '<div class="lbl">Gross rental yield</div>' +
+      '<div class="stat"><span>Sewa tahunan</span><b>' + fmt(annual) + '</b></div>' +
+      '<div class="stat"><span>Nota</span><b>' + note + '</b></div>';
+    cta.style.display='block';
+  }
+
+  // ===== DEPOSIT =====
+  function calcDeposit(){
+    gtag('event','calc_deposit');
+    var target = parseFloat(document.getElementById('dep-target').value);
+    var monthly = parseFloat(document.getElementById('dep-monthly').value);
+    var current = parseFloat(document.getElementById('dep-current').value) || 0;
+    var r = document.getElementById('dep-result');
+    var cta = document.getElementById('cta-dep');
+    if(!target || !monthly || monthly<=0){ alert('Masukkan target & simpanan bulanan.'); return; }
+    var remain = target - current;
+    if(remain <= 0){
+      r.className='result show good';
+      r.innerHTML = '<div class="big">Dah cukup! 🎉</div><div class="lbl">Deposit kau dah ada — boleh mula cari rumah.</div>';
+      cta.style.display='block'; return;
+    }
+    var months = Math.ceil(remain / monthly);
+    var years = Math.floor(months/12), rm = months%12;
+    r.className='result show ' + (months<=36 ? 'good' : 'warn');
+    var t = months<=36 ? 'Boleh capai cepat — disiplin je kuncinya.' : 'Ambil masa — cuba tambah side income untuk lajukan.';
+    r.innerHTML =
+      '<div class="big">' + months + ' bulan</div>' +
+      '<div class="lbl">(' + (years>0 ? years + ' tahun ' : '') + (rm>0 ? rm + ' bulan' : '') + ')</div>' +
+      '<div class="stat"><span>Baki perlu kumpul</span><b>' + fmt(remain) + '</b></div>' +
+      '<div class="stat"><span>Simpanan bulanan</span><b>' + fmt(monthly) + '</b></div>' +
+      '<div class="stat"><span>Nota</span><b>' + t + '</b></div>';
     cta.style.display='block';
   }
 
