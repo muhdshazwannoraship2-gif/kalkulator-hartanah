@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kalkulator Hartanah — Averi World Maker Services</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EYC4FJRWRQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EYC4FJRWRQ');
+</script>
 <style>
   :root{
     --maroon:#7B1C2A;
@@ -188,6 +196,7 @@
 
   // ===== DSR =====
   function calcDSR(){
+    gtag('event','calc_dsr');
     var gaji = parseFloat(document.getElementById('dsr-gaji').value);
     var kom = parseFloat(document.getElementById('dsr-komitmen').value) || 0;
     var r = document.getElementById('dsr-result');
@@ -216,6 +225,7 @@
 
   // ===== RENO =====
   function calcReno(){
+    gtag('event','calc_reno');
     var tier = document.getElementById('reno-tier').value;
     var saiz = parseFloat(document.getElementById('reno-saiz').value) || 0;
     var r = document.getElementById('reno-result');
@@ -260,6 +270,7 @@
   });
 
   function calcCheck(){
+    gtag('event','calc_check');
     var score = answers.reduce(function(a,b){return a+b;},0);
     var r = document.getElementById('check-result');
     var cta = document.getElementById('cta-check');
@@ -284,6 +295,11 @@
       this.classList.add('active');
       document.getElementById('panel-' + this.getAttribute('data-tab')).classList.add('active');
     });
+  });
+
+  // ===== track CTA (ebook) clicks =====
+  document.querySelectorAll('.cta-link').forEach(function(a){
+    a.addEventListener('click', function(){ gtag('event','lead_click'); });
   });
 </script>
 </body>
